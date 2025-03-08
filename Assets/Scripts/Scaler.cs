@@ -1,10 +1,15 @@
 using UnityEngine;
 
-public class ChangeScale : MonoBehaviour
+public class Scaler : MonoBehaviour
 {
     [SerializeField] private float _scaleChangeSpeed = 0.1f;
 
-    void Update()
+    private void Update()
+    {
+        ChangeScale();
+    }
+
+    private void ChangeScale()
     {
         Vector3 direction = new Vector3(_scaleChangeSpeed, _scaleChangeSpeed, _scaleChangeSpeed) * Time.deltaTime;
         transform.localScale += direction;
