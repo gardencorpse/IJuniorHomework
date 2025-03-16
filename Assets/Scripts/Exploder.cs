@@ -14,6 +14,7 @@ public class Exploder
             rigidbody.AddExplosionForce(_power, rigidbody.position, _radius, _powerUp, ForceMode.Impulse);
         }
     }
+
     public void Explode(List<Rigidbody> rigidbodys,Vector3 position, int explosionMultiplier)
     {
         foreach (Rigidbody rigidbody in rigidbodys)

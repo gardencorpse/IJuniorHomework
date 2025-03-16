@@ -6,6 +6,7 @@ public class Raycaster : MonoBehaviour
     [SerializeField] private int _distance = 15;
     private Ray _ray;
     private Camera _camera;
+    private KeyCode leftMouseClick = KeyCode.Mouse0;
 
     private void Awake()
     {
@@ -14,15 +15,13 @@ public class Raycaster : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(leftMouseClick))
         {
             _ray = _camera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit[] hits;
-            hits = Physics.RaycastAll(_ray, _distance);
 
-            foreach (RaycastHit hit in hits)
+            if (Physics.Raycast(_ray, out RaycastHit hit, _distance))
             {
-                if(hit.collider.TryGetComponent(out Cube cube))
+                if (hit.collider.TryGetComponent(out Cube cube))
                 {
                     cube.OnMouseClick();
                 }
