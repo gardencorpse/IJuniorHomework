@@ -4,27 +4,28 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Cube : MonoBehaviour
 {
-    public event Action<Cube> OnClicked;
-
     private int _splitChance = 100;
     private Rigidbody _rigidbody;
 
-    public Rigidbody Rigidbody => _rigidbody;
-    public int SplitChance => _splitChance;
+    public event Action<Cube> Clicked;
 
-    public void Initialize(int splitChance, Vector3 scale)
-    {
-        _splitChance = splitChance;
-        transform.localScale = scale;
-    }
+    public int SplitChance => _splitChance;
+    public Rigidbody Rigidbody => _rigidbody;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
     }
-
-    private void OnMouseDown()
+    
+    public void OnMouseClick()
     {
-        OnClicked?.Invoke(this);
+        Clicked?.Invoke(this);
+        Destroy(gameObject);
+    }
+
+    public void Initialize(int splitChance, Vector3 scale)
+    {
+        _splitChance = splitChance;
+        transform.localScale = scale;
     }
 }

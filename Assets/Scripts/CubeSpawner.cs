@@ -3,16 +3,22 @@ using UnityEngine;
 
 public class CubeSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject _prefab;
+    [SerializeField] private Cube _prefab;
     [SerializeField] private List<Cube> _cubes;
 
     private int _divider = 2;
+    private Exploder _exploder;
+
+    private void Awake()
+    {
+        _exploder = new Exploder();
+    }
 
     private void OnEnable()
     {
         foreach (Cube cube in _cubes)
         {
-            cube.OnClicked += SpawnCube;
+            cube.Clicked += SpawnCube;
         }
     }
 
@@ -20,22 +26,9 @@ public class CubeSpawner : MonoBehaviour
     {
         foreach (Cube cube in _cubes)
         {
-            cube.OnClicked -= SpawnCube;
+            cube.Clicked -= SpawnCube;
         }
     }
-
-    private void Explode(List<Rigidbody> rigidbodys)
-    {
-        float _explodeRadius = 25f;
-        float _explodePower = 5f;
-        float _explodePowerUp = 3f;
-
-        foreach (Rigidbody rigidbody in rigidbodys)
-        {
-            rigidbody.AddExplosionForce(_explodePower, rigidbody.position, _explodeRadius, _explodePowerUp, ForceMode.Impulse);
-        }
-    }
-
 
     private void SpawnCube(Cube cube)
     {
@@ -46,13 +39,12 @@ public class CubeSpawner : MonoBehaviour
         {
             int newCubesMin = 2;
             int newCubesMax = 6;
-            int newCubesCount = Random.RandomRange(newCubesMin, newCubesMax);
+            int newCubesCount = Random.Range(newCubesMin, newCubesMax);
             List<Rigidbody> rigidbodys = new List<Rigidbody>();
 
             for (int i = 0; i < newCubesCount; i++)
             {
-                GameObject newCubeObject = Instantiate(_prefab, cube.transform.position, Quaternion.identity);
-                Cube newCube = newCubeObject.GetComponent<Cube>();
+                Cube newCube = Instantiate(_prefab, cube.transform.position, Quaternion.identity);
                 rigidbodys.Add(newCube.Rigidbody);
 
                 int splitChance = cube.SplitChance / _divider;
@@ -66,15 +58,14 @@ public class CubeSpawner : MonoBehaviour
                 if (newCube != null)
                 {
                     _cubes.Add(newCube);
-                    newCube.OnClicked += SpawnCube;
+                    newCube.Clicked += SpawnCube;
                 }
             }
 
-            Explode(rigidbodys);
+            _exploder.Explode(rigidbodys);
         }
 
         _cubes.Remove(cube);
-        cube.OnClicked -= SpawnCube;
-        Destroy(cube.gameObject);
+        cube.Clicked -= SpawnCube;
     }
 }

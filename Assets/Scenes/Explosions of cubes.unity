@@ -724,7 +724,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f83a6692ab342c040b0c81026ffb636d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 3412346033670508778, guid: 681aba7ffa8f3af4e9e56d9d919c1560, type: 3}
+  _prefab: {fileID: 2459629372349403371, guid: 681aba7ffa8f3af4e9e56d9d919c1560, type: 3}
   _cubes:
   - {fileID: 1060057293}
   - {fileID: 1768810619}
@@ -824,6 +824,7 @@ GameObject:
   - component: {fileID: 1813663213}
   - component: {fileID: 1813663212}
   - component: {fileID: 1813663215}
+  - component: {fileID: 1813663216}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -949,6 +950,19 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &1813663216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813663211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 289d40bc06b173c42825b8e5ae2f4e2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _distance: 15
 --- !u!114 &1826283884 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2459629372349403371, guid: 681aba7ffa8f3af4e9e56d9d919c1560, type: 3}
