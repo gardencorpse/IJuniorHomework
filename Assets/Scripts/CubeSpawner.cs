@@ -47,13 +47,14 @@ public class CubeSpawner : MonoBehaviour
                 Cube newCube = Instantiate(_prefab, cube.transform.position, Quaternion.identity);
                 rigidbodys.Add(newCube.Rigidbody);
 
+                int explosionMultiplier = cube.ExplosionMultiplier + 1;
                 int splitChance = cube.SplitChance / _divider;
                 Vector3 newScale = new Vector3(
                     cube.transform.localScale.x / _divider,
                     cube.transform.localScale.y / _divider,
                     cube.transform.localScale.z / _divider);
 
-                newCube.Initialize(splitChance, newScale);
+                newCube.Initialize(explosionMultiplier, splitChance, newScale);
 
                 if (newCube != null)
                 {
@@ -63,6 +64,10 @@ public class CubeSpawner : MonoBehaviour
             }
 
             _exploder.Explode(rigidbodys);
+        }
+        else
+        {
+            _exploder.Explode(_exploder.GetExplodableObjects(cube.transform.position), cube.transform.position, cube.ExplosionMultiplier);
         }
 
         _cubes.Remove(cube);

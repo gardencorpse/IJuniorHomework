@@ -4,6 +4,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Cube : MonoBehaviour
 {
+    public int ExplosionMultiplier { get; private set; } = 1;
+
     private int _splitChance = 100;
     private Rigidbody _rigidbody;
 
@@ -23,8 +25,9 @@ public class Cube : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void Initialize(int splitChance, Vector3 scale)
+    public void Initialize(int explosionMultiplier, int splitChance, Vector3 scale)
     {
+        ExplosionMultiplier = explosionMultiplier;
         _splitChance = splitChance;
         transform.localScale = scale;
     }
