@@ -15,9 +15,9 @@ public class Exploder
         }
     }
 
-    public void Explode(List<Rigidbody> rigidbodys,Vector3 position, int explosionMultiplier)
+    public void Explode(Vector3 position, int explosionMultiplier)
     {
-        foreach (Rigidbody rigidbody in rigidbodys)
+        foreach (Rigidbody rigidbody in GetExplodableObjects(position))
         {
             rigidbody.AddExplosionForce(_power * explosionMultiplier, position, _radius * explosionMultiplier, _powerUp, ForceMode.Impulse);
         }
@@ -28,6 +28,7 @@ public class Exploder
         Collider[] hits = Physics.OverlapSphere(position, _radius);
 
         List<Rigidbody> rigidbodies = new();
+
         foreach (Collider hit in hits)
             if (hit.TryGetComponent(out Rigidbody cube))
                 rigidbodies.Add(cube);

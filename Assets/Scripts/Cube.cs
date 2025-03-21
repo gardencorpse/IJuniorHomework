@@ -8,9 +8,6 @@ public class Cube : MonoBehaviour
 
     private int _splitChance = 100;
     private Rigidbody _rigidbody;
-
-    public event Action<Cube> Clicked;
-
     public int SplitChance => _splitChance;
     public Rigidbody Rigidbody => _rigidbody;
 
@@ -18,17 +15,19 @@ public class Cube : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
     }
-    
-    public void OnMouseClick()
-    {
-        Clicked?.Invoke(this);
-        Destroy(gameObject);
-    }
 
     public void Initialize(int explosionMultiplier, int splitChance, Vector3 scale)
     {
         ExplosionMultiplier = explosionMultiplier;
         _splitChance = splitChance;
         transform.localScale = scale;
+    }
+
+    public bool IsSplit()
+    {
+        int maxChance = 100;
+        int randomChance = UnityEngine.Random.Range(1, maxChance + 1);
+
+        return _splitChance >= randomChance;
     }
 }
