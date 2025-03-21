@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//CubeClickHandle
 public class CubeSpawner : MonoBehaviour
 {
     [SerializeField] private Cube _prefab;
