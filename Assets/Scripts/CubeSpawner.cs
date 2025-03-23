@@ -6,7 +6,7 @@ public class CubeSpawner : MonoBehaviour
     [SerializeField] private Cube _prefab;
     private int _repeatRate = 1;
     private ObjectPool<Cube> _pool;
-    private int _poolCapacity = 15;
+    private int _poolCapacity = 50;
     private int _poolMaxSize = 50;
 
     private void Awake()
@@ -27,22 +27,23 @@ public class CubeSpawner : MonoBehaviour
         cube.gameObject.transform.position = GetSpawnPosition();
         cube.Rigidbody.angularVelocity = Vector3.zero;
         cube.gameObject.SetActive(true);
-
+        cube.Initialize();
+        cube.OnTimeOuted += ReleaseCube;
     }
 
     private void Start()
     {
         InvokeRepeating(nameof(Spawn), 0.0f, _repeatRate);
-        _pool.Get();
     }
 
     private void Spawn()
     {
-        Instantiate(_prefab, GetSpawnPosition(), Quaternion.identity);
+        _pool.Get();
     }
 
     private void ReleaseCube(Cube cube)
     {
+        cube.OnTimeOuted -= ReleaseCube;
         _pool.Release(cube);
     }
 

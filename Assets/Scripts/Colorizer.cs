@@ -4,15 +4,21 @@ using UnityEngine;
 public class Colorizer : MonoBehaviour
 {
     private MeshRenderer _meshRenderer;
+    private Color _defaultColor;
 
     private void Awake()
     {
         _meshRenderer = GetComponent<MeshRenderer>();
-        _meshRenderer.material.color = GetRandomColor();
+        _defaultColor = _meshRenderer.material.color;
     }
 
-    private Color GetRandomColor()
+    public void ChangeColorToRed()
     {
-        return Random.ColorHSV();
+        _meshRenderer.material.color = Color.red;
+    }
+
+    public void ChangeColorToDefault()
+    {
+        _meshRenderer.material.color = _defaultColor;
     }
 }
