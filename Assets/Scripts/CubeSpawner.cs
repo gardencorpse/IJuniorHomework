@@ -1,32 +1,59 @@
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class CubeSpawner : MonoBehaviour
 {
     [SerializeField] private Cube _prefab;
+    private int _repeatRate = 1;
+    private ObjectPool<Cube> _pool;
+    private int _poolCapacity = 15;
+    private int _poolMaxSize = 50;
 
-    public void SpawnCubes(Cube cube, out List<Rigidbody> rigidbodys)
+    private void Awake()
     {
-        int _chanceDivider = 2;
-        int _scaleDivider = 2;
-        int newCubesMin = 2;
-        int newCubesMax = 6;
-        int newCubesCount = Random.Range(newCubesMin, newCubesMax + 1);
-        rigidbodys = new List<Rigidbody>();
+        _pool = new ObjectPool<Cube>(
+            createFunc: () => Instantiate(_prefab),
+            actionOnGet: (cube) => ActionOnGet(cube),
+            actionOnRelease: (cube) => cube.gameObject.SetActive(false),
+            actionOnDestroy: (cube) => Destroy(cube.gameObject),
+            collectionCheck: true,
+            defaultCapacity: _poolCapacity,
+            maxSize: _poolMaxSize
+            );
+    }
 
-        for (int i = 0; i < newCubesCount; i++)
-        {
-            Cube newCube = Instantiate(_prefab, cube.transform.position, Quaternion.identity);
-            rigidbodys.Add(newCube.Rigidbody);
+    private void ActionOnGet(Cube cube)
+    {
+        cube.gameObject.transform.position = GetSpawnPosition();
+        cube.Rigidbody.angularVelocity = Vector3.zero;
+        cube.gameObject.SetActive(true);
 
-            int explosionMultiplier = cube.ExplosionMultiplier + 1;
-            int splitChance = cube.SplitChance / _chanceDivider;
-            Vector3 newScale = new Vector3(
-                cube.transform.localScale.x / _scaleDivider,
-                cube.transform.localScale.y / _scaleDivider,
-                cube.transform.localScale.z / _scaleDivider);
+    }
 
-            newCube.Initialize(explosionMultiplier, splitChance, newScale);
-        }
+    private void Start()
+    {
+        InvokeRepeating(nameof(Spawn), 0.0f, _repeatRate);
+        _pool.Get();
+    }
+
+    private void Spawn()
+    {
+        Instantiate(_prefab, GetSpawnPosition(), Quaternion.identity);
+    }
+
+    private void ReleaseCube(Cube cube)
+    {
+        _pool.Release(cube);
+    }
+
+    private Vector3 GetSpawnPosition()
+    {
+        int hight = 10;
+        int maxLength = 10;
+        int maxWidth = 3;
+        int length = Random.Range(-maxLength, maxLength + 1);
+        int width = Random.Range(-maxWidth, maxWidth + 1);
+
+        return new Vector3(length, hight, width);
     }
 }

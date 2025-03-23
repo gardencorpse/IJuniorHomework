@@ -29,8 +29,8 @@ public class CubeClickHandler : MonoBehaviour
                 {
                     if (cube.IsSplit())
                     {
-                        _cubeSpawner.SpawnCubes(cube, out List<Rigidbody> rigidbodys);
-                        _exploder.Explode(rigidbodys);
+                        //_cubeSpawner.SpawnCubes(cube, out List<Rigidbody> rigidbodys);
+                        //_exploder.Explode(rigidbodys);
                     }
                     else
                     {
