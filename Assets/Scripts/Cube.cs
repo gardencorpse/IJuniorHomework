@@ -21,7 +21,7 @@ public class Cube : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.TryGetComponent<Platform>(out Platform platform))//
+        if (collision.gameObject.GetComponent<Platform>())
         {
             StartTimerDestroy();
         }
