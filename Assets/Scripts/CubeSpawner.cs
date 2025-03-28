@@ -27,7 +27,7 @@ public class CubeSpawner : MonoBehaviour
 
     private void Start()
     {
-        _coroutine = StartCoroutine(LaunchTimer());
+        _coroutine = StartCoroutine(LaunchSpawner());
     }
 
     private void Spawn()
@@ -65,7 +65,7 @@ public class CubeSpawner : MonoBehaviour
             offsetPosition.z + width);
     }
 
-    private IEnumerator LaunchTimer()
+    private IEnumerator LaunchSpawner()
     {
         var wait = new WaitForSeconds(_repeatRate);
 
