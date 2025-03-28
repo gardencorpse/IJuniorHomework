@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody), typeof(Colorizer))]
 public class Cube : MonoBehaviour
 {
     private Colorizer _colorizer;
@@ -10,7 +10,7 @@ public class Cube : MonoBehaviour
     private Coroutine _coroutine;
     private bool _isTimerLaunch = false;
 
-    public event Action<Cube> OnTimeOuted;
+    public event Action<Cube> TimeOuted;
 
     public Rigidbody Rigidbody => _rigidbody;
 
@@ -19,6 +19,13 @@ public class Cube : MonoBehaviour
         _colorizer = GetComponent<Colorizer>();
         _rigidbody = GetComponent<Rigidbody>();
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.TryGetComponent<Platform>(out Platform platform))//
+        {
+            StartTimerDestroy();
+        }
+    }
 
     public void Initialize()
     {
@@ -26,13 +33,13 @@ public class Cube : MonoBehaviour
         _colorizer.ChangeColorToDefault();
     }
 
-    public void StartTimer()
+    public void StartTimerDestroy()
     {
         if (_isTimerLaunch)
             return;
         
         _isTimerLaunch = true;
-        _coroutine = StartCoroutine(LaunchTimer());
+        _coroutine = StartCoroutine(LaunchTimer());  
     }
 
     private IEnumerator LaunchTimer()
@@ -43,6 +50,6 @@ public class Cube : MonoBehaviour
 
         yield return new WaitForSeconds(UnityEngine.Random.Range(minDelay, maxDelay + 1));
 
-        OnTimeOuted.Invoke(this);
+        TimeOuted.Invoke(this);
     }
 }
