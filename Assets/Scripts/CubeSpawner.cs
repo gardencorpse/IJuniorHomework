@@ -69,7 +69,7 @@ public class CubeSpawner : MonoBehaviour
     {
         var wait = new WaitForSeconds(_repeatRate);
 
-        while (true)
+        while (enabled)
         {
             yield return wait;
             Spawn();

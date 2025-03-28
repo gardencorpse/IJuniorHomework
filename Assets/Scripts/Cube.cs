@@ -8,7 +8,7 @@ public class Cube : MonoBehaviour
     private Colorizer _colorizer;
     private Rigidbody _rigidbody;
     private Coroutine _coroutine;
-    private bool _isTimerLaunch = false;
+    private bool _isTouchPlatform = false;
 
     public event Action<Cube> TimeOuted;
 
@@ -19,26 +19,28 @@ public class Cube : MonoBehaviour
         _colorizer = GetComponent<Colorizer>();
         _rigidbody = GetComponent<Rigidbody>();
     }
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.GetComponent<Platform>())
+        if (_isTouchPlatform)
+            return;
+
+        if (collision.gameObject.TryGetComponent<Platform>(out Platform _))
         {
+            _isTouchPlatform = true;
+            _colorizer.ChangeColorToRed();
             StartTimerDestroy();
         }
     }
 
     public void Initialize()
     {
-        _isTimerLaunch = false;
+        _isTouchPlatform = false;
         _colorizer.ChangeColorToDefault();
     }
 
-    public void StartTimerDestroy()
+    private void StartTimerDestroy()
     {
-        if (_isTimerLaunch)
-            return;
-        
-        _isTimerLaunch = true;
         _coroutine = StartCoroutine(LaunchTimer());  
     }
 
@@ -46,7 +48,6 @@ public class Cube : MonoBehaviour
     {
         int minDelay = 3;
         int maxDelay = 5;
-        _colorizer.ChangeColorToRed();
 
         yield return new WaitForSeconds(UnityEngine.Random.Range(minDelay, maxDelay + 1));
 
