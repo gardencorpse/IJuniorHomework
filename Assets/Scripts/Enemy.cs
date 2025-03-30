@@ -7,17 +7,12 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        Move();
+        transform.LookAt(_target);
+        transform.position = Vector3.MoveTowards(transform.position, _target.position, _moveSpeed * Time.deltaTime);
     }
 
     public void Initialize(Transform target)
     {
         _target = target;
-    }
-
-    private void Move()
-    {
-        transform.LookAt(_target);
-        transform.position = Vector3.MoveTowards(transform.position, _target.position, _moveSpeed * Time.deltaTime);
     }
 }

@@ -8,16 +8,6 @@ public class Target : MonoBehaviour
 
     private void Update()
     {
-        Move();
-    }
-
-    public void Initialize(Transform[] waypoints)
-    {
-        _waypoints = waypoints;
-    }
-
-    private void Move()
-    {
         if (_waypoints.Length <= 0)
             return;
 
@@ -27,5 +17,10 @@ public class Target : MonoBehaviour
         }
 
         transform.position = Vector3.MoveTowards(transform.position, _waypoints[_currentWaypoint].position, _speed * Time.deltaTime);
+    }
+
+    public void Initialize(Transform[] waypoints)
+    {
+        _waypoints = waypoints;
     }
 }

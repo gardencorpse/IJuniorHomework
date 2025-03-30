@@ -28,6 +28,6 @@ public class Spawner : MonoBehaviour
     {
         SpawnPoint spawnPoint = _spawnPoints[Random.Range(0, _spawnPoints.Length)];
         Enemy enemy = Instantiate(spawnPoint.EnemyPrefab, spawnPoint.transform);
-        enemy.Initialize(spawnPoint.TargetPosition);
+        enemy.Initialize(spawnPoint.TargetTransform);
     }
 }
