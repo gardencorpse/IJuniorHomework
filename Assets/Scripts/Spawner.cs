@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private Enemy _enemy;
-    [SerializeField] private Transform[] _spawnPoints;
+    [SerializeField] private SpawnPoint[] _spawnPoints;
 
     private Coroutine _coroutine;
     private int _delay = 2;
@@ -27,18 +26,8 @@ public class Spawner : MonoBehaviour
 
     private void Spawn()
     {
-        Enemy enemy = Instantiate(_enemy, GetSpawnPosition(), Quaternion.identity);
-        enemy.Initialize(GetRotateAngle());
-    }
-
-    private Vector3 GetSpawnPosition()
-    {
-        return _spawnPoints[Random.Range(0, _spawnPoints.Length)].position;
-    }
-
-    private int GetRotateAngle()
-    {
-        int maxAngle = 360;
-        return Random.Range(0, maxAngle + 1);
+        SpawnPoint spawnPoint = _spawnPoints[Random.Range(0, _spawnPoints.Length)];
+        Enemy enemy = Instantiate(spawnPoint.EnemyPrefab, spawnPoint.transform);
+        enemy.Initialize(spawnPoint.TargetPosition);
     }
 }

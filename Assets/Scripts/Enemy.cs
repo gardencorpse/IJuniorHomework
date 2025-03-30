@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    private Vector3 _moveDirection;
+    private Transform _target;
     private float _moveSpeed = 1.5f;
 
     private void Update()
@@ -10,13 +10,14 @@ public class Enemy : MonoBehaviour
         Move();
     }
 
-    private void Move()
+    public void Initialize(Transform target)
     {
-        transform.Translate(Vector3.forward * _moveSpeed * Time.deltaTime);
+        _target = target;
     }
 
-    public void Initialize(int moveDirection)
+    private void Move()
     {
-        transform.rotation = Quaternion.AngleAxis(moveDirection, Vector3.up);
+        transform.LookAt(_target);
+        transform.position = Vector3.MoveTowards(transform.position, _target.position, _moveSpeed * Time.deltaTime);
     }
 }
