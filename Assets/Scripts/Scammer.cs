@@ -8,25 +8,25 @@ public class Scammer : MonoBehaviour
 
     private int _currentIndex = 0;
 
-    private void OnValidate()
+#if UNITY_EDITOR
+    [ContextMenu("Refresh Child Array")]
+    private void RefreshChildArray()
     {
-        if (_wayPointsContainer != null)
+        _wayPoints = new Transform[_wayPointsContainer.childCount];
+
+        if (_wayPoints.Length == 0)
         {
-            _wayPoints = new Transform[_wayPointsContainer.childCount];
+            Debug.LogWarning("Places Container не имеет дочерних объектов!");
+        }
 
-            if (_wayPoints.Length == 0)
-            {
-                Debug.LogWarning("Places Container не имеет дочерних объектов!");
-            }
-
-            for (int i = 0; i < _wayPoints.Length; i++)
-            {
-                _wayPoints[i] = _wayPointsContainer.GetChild(i);
-            }
+        for (int i = 0; i < _wayPoints.Length; i++)
+        {
+            _wayPoints[i] = _wayPointsContainer.GetChild(i);
         }
     }
+#endif
 
-    void Update()
+    private void Update()
     {
         if(transform.position == _wayPoints[_currentIndex].position)
         {

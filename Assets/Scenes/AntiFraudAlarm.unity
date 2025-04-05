@@ -1023,7 +1023,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7937108432352369227, guid: 927f5d83c2fccdf48bdccb4608c127ee, type: 3}
       propertyPath: m_Name
-      value: Siren
+      value: Alarm
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 927f5d83c2fccdf48bdccb4608c127ee, type: 3}
       propertyPath: m_Name
@@ -1051,6 +1051,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -7937108432352369227, guid: 927f5d83c2fccdf48bdccb4608c127ee, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2047202417}
+    - targetCorrespondingSourceObject: {fileID: -7937108432352369227, guid: 927f5d83c2fccdf48bdccb4608c127ee, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2047202419}
   m_SourcePrefab: {fileID: 100100000, guid: 927f5d83c2fccdf48bdccb4608c127ee, type: 3}
 --- !u!4 &1652110798 stripped
 Transform:
@@ -1409,8 +1412,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13b8cc986d43272459bff0e192a981a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  observer: {fileID: 979427826}
-  flashingLight: {fileID: 1771226535}
+--- !u!114 &2047202419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047202415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1621b6d7ea45424daa4aeef5d9472b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _observer: {fileID: 979427826}
+  _flashingLight: {fileID: 1771226535}
+  _siren: {fileID: 2047202418}
 --- !u!1001 &8954536056511762916
 PrefabInstance:
   m_ObjectHideFlags: 0
