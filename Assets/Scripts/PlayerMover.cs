@@ -1,6 +1,3 @@
-using System;
-using Unity.VisualScripting;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -10,15 +7,33 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private float _runMultiplier = 1.1f;
     [SerializeField] private float _jumpForce = 500f;
     [SerializeField] private GroundChecker _groundChecker;
+    [SerializeField] private Animator _animator;
 
+    private CharacterAnimation _characterAnimation;
     private UserInput _userInput;
     private Rigidbody2D _rigidbody;
     private bool _isLookingRigt = true;
+    private bool _isGrounded = true;
+    private bool _isJumping = false;
+    private float _idleParameter = 0f;
+    private float _walkParameter = 0.5f;
+    private float _runParameter = 1f;
+
+    private void OnEnable()
+    {
+        _groundChecker.IsGrounded += OnGroundChange;
+    }
+
+    private void OnDisable()
+    {
+        _groundChecker.IsGrounded -= OnGroundChange;
+    }
 
     private void Awake()
     {
         _userInput = gameObject.AddComponent<UserInput>();
         _rigidbody = GetComponent<Rigidbody2D>();
+        _characterAnimation = new CharacterAnimation(_animator);
     }
 
     private void Update()
@@ -36,6 +51,10 @@ public class PlayerMover : MonoBehaviour
 
             CheckLookDirection();
         }
+        else
+        {
+            _characterAnimation.ChangeSpeed(_idleParameter);
+        }
 
         if (_userInput.IsSpaceDown)
         {
@@ -43,9 +62,20 @@ public class PlayerMover : MonoBehaviour
         }
     }
 
+    private void MoveHorizontal(float horizontalInput)
+    {
+        float speed = horizontalInput * _speed;
+
+        _rigidbody.linearVelocityX = speed;
+        _characterAnimation.ChangeSpeed(_walkParameter);
+    }
+
     private void MoveHorizontal(float horizontalInput, float multiplier = 1)
     {
-        _rigidbody.linearVelocityX = horizontalInput * multiplier * _speed;
+        float speed = horizontalInput * multiplier * _speed;
+
+        _rigidbody.linearVelocityX = speed;
+        _characterAnimation.ChangeSpeed(_runParameter);
     }
 
     private void CheckLookDirection()
@@ -66,11 +96,28 @@ public class PlayerMover : MonoBehaviour
         transform.Rotate(0, 180, 0);
     }
 
+    private void OnGroundChange(bool isGrounded)
+    {
+        _isGrounded = isGrounded;
+
+        if (_isGrounded)
+        {
+            _characterAnimation.PlayGrounded();
+            _isJumping = false;
+        }
+        else if (isGrounded == false && _isJumping == false)
+        {
+            _characterAnimation.PlayFalling();
+        }
+    }
+
     private void Jump()
     {
-        if (_groundChecker.IsGround)
+        if (_isGrounded)
         {
+            _isJumping = true;
             _rigidbody.AddForce(new Vector2(0, _jumpForce));
+            _characterAnimation.PlayJump();
         }
     }
 }
