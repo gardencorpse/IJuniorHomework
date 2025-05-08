@@ -9,4 +9,9 @@ public static class Constants
         public const string Fall = nameof(Fall);
         public const string Grounded = nameof(Grounded);
     }
+
+    public static class Input
+    {
+        public const string HorizontalAxis = "Horizontal";
+    }
 }

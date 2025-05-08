@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public class Enemy : MonoBehaviour
@@ -7,8 +8,14 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Transform[] _wayPoints;
     [SerializeField] private float _speed = 2;
 
+    private Flipper _flipper;
     private int _currentIndex = 0;
     private bool _isLookingRight = true;
+
+    private void Awake()
+    {
+        _flipper = new Flipper(transform, _isLookingRight);
+    }
 
 #if UNITY_EDITOR
     [ContextMenu("Refresh Child Array")]
@@ -33,30 +40,23 @@ public class Enemy : MonoBehaviour
         if (transform.position == _wayPoints[_currentIndex].position)
         {
             _currentIndex = ++_currentIndex % _wayPoints.Length;
-            CheckLookDirection();
+            UpdateLookDirection();
         }
 
         transform.position = Vector2.MoveTowards(transform.position, _wayPoints[_currentIndex].position, _speed * Time.deltaTime);
-        //transform.LookAt(_wayPoints[_currentIndex].position);
     }
 
-    private void CheckLookDirection()
+    private void UpdateLookDirection()
     {
         bool isNeedLookRight = _wayPoints[_currentIndex].position.x > transform.position.x;
 
-        if (_isLookingRight && isNeedLookRight == false)
+        if (_flipper.IsLookingRigt && isNeedLookRight == false)
         {
-            Flip();
+            _flipper.Flip();
         }
-        else if(_isLookingRight == false && isNeedLookRight)
+        else if(_flipper.IsLookingRigt == false && isNeedLookRight)
         {
-            Flip();
+            _flipper.Flip();
         }
-    }
-
-    private void Flip()
-    {
-        _isLookingRight = !_isLookingRight;
-        transform.Rotate(0, 180, 0);
     }
 }

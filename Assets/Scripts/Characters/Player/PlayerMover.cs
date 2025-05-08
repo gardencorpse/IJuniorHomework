@@ -6,18 +6,28 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _runMultiplier = 1.1f;
     [SerializeField] private float _jumpForce = 500f;
+    [SerializeField] private UserInput _userInput;
     [SerializeField] private GroundChecker _groundChecker;
     [SerializeField] private Animator _animator;
 
     private CharacterAnimation _characterAnimation;
-    private UserInput _userInput;
     private Rigidbody2D _rigidbody;
-    private bool _isLookingRigt = true;
+    private Flipper _flipper;
+    private bool _isLookingRight = true;
     private bool _isGrounded = true;
     private bool _isJumping = false;
+    private bool _isJump = false;
     private float _idleParameter = 0f;
     private float _walkParameter = 0.5f;
     private float _runParameter = 1f;
+
+    private void Awake()
+    {
+        _userInput = gameObject.AddComponent<UserInput>();
+        _rigidbody = GetComponent<Rigidbody2D>();
+        _characterAnimation = new CharacterAnimation(_animator);
+        _flipper = new Flipper(transform, _isLookingRight);
+    }
 
     private void OnEnable()
     {
@@ -29,71 +39,54 @@ public class PlayerMover : MonoBehaviour
         _groundChecker.IsGrounded -= OnGroundChange;
     }
 
-    private void Awake()
+    private void Update()
     {
-        _userInput = gameObject.AddComponent<UserInput>();
-        _rigidbody = GetComponent<Rigidbody2D>();
-        _characterAnimation = new CharacterAnimation(_animator);
+        if (_userInput.IsSpaceDown)
+            _isJump = true;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (_userInput.HorizontalInput != 0)
         {
             if (_userInput.IsShiftPress)
             {
-                MoveHorizontal(_userInput.HorizontalInput, _runMultiplier);
+                MoveHorizontal(_userInput.HorizontalInput, _runParameter, _runMultiplier);
             }
             else
             {
-                MoveHorizontal(_userInput.HorizontalInput);
+                MoveHorizontal(_userInput.HorizontalInput, _walkParameter);
             }
 
-            CheckLookDirection();
+            UpdateLookDirection();
         }
         else
         {
             _characterAnimation.ChangeSpeed(_idleParameter);
         }
 
-        if (_userInput.IsSpaceDown)
-        {
+        if (_isJump)
             Jump();
-        }
     }
 
-    private void MoveHorizontal(float horizontalInput)
-    {
-        float speed = horizontalInput * _speed;
-
-        _rigidbody.linearVelocityX = speed;
-        _characterAnimation.ChangeSpeed(_walkParameter);
-    }
-
-    private void MoveHorizontal(float horizontalInput, float multiplier = 1)
+    private void MoveHorizontal(float horizontalInput, float animationParametr, float multiplier = 1)
     {
         float speed = horizontalInput * multiplier * _speed;
 
         _rigidbody.linearVelocityX = speed;
-        _characterAnimation.ChangeSpeed(_runParameter);
+        _characterAnimation.ChangeSpeed(animationParametr);
     }
 
-    private void CheckLookDirection()
+    private void UpdateLookDirection()
     {
-        if (_isLookingRigt && _userInput.HorizontalInput < 0)
+        if (_flipper.IsLookingRigt && _userInput.HorizontalInput < 0)
         {
-            Flip();
+            _flipper.Flip();
         }
-        else if (_isLookingRigt == false && _userInput.HorizontalInput > 0)
+        else if (_flipper.IsLookingRigt == false && _userInput.HorizontalInput > 0)
         {
-            Flip();
+            _flipper.Flip();
         }
-    }
-
-    private void Flip()
-    {
-        _isLookingRigt = !_isLookingRigt;
-        transform.Rotate(0, 180, 0);
     }
 
     private void OnGroundChange(bool isGrounded)
@@ -113,6 +106,8 @@ public class PlayerMover : MonoBehaviour
 
     private void Jump()
     {
+        _isJump = false;
+
         if (_isGrounded)
         {
             _isJumping = true;

@@ -20,5 +20,4 @@ public class CoinWallet : MonoBehaviour
     {
         Debug.Log($"Coins: {_amount}");
     }
-
 }

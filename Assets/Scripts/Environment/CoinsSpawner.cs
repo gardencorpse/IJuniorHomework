@@ -1,7 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 
 public class CoinsSpawner : MonoBehaviour
 {
@@ -27,18 +27,21 @@ public class CoinsSpawner : MonoBehaviour
         }
     }
 
-    private void Awake()
-    {
-        //_pool = new ObjectPool<Coin>()
-    }
-
     private void OnCollected(Coin coin)
     {
         Collected?.Invoke(coin);
 
         if (_isRespawn)
         {
-            coin.Respawn(_respawnDelay);
+            StartCoroutine(LaunchRespawn(coin));
         }
+    }
+
+    private IEnumerator LaunchRespawn(Coin coin)
+    {
+        var wait = new WaitForSeconds(_respawnDelay);
+
+        yield return wait;
+        coin.Initialize();
     }
 }

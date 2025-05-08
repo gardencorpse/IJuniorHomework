@@ -5,12 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D), typeof(MeshRenderer))]
 public class Coin : MonoBehaviour
 {
-    public int Value { get; private set; } = 1;
-
     [SerializeField] private float _changeScaleSpeed = 0.05f;
+
     private Collider2D _collider;
     private MeshRenderer _meshRenderer;
     private Coroutine _coroutine;
+
+    public int Value { get; private set; } = 1;
 
     public event Action<Coin> Collected;
 
@@ -23,6 +24,7 @@ public class Coin : MonoBehaviour
     public void Initialize()
     {
         _collider.enabled = true;
+        _meshRenderer.enabled = true;
         StartCoroutine(LaunchVisualize());
     }
 
@@ -36,20 +38,6 @@ public class Coin : MonoBehaviour
     public void Hide()
     {
         StartCoroutine(LaunchHiding(Vector3.zero));
-    }
-
-    public void Respawn(int delay)
-    {
-        _coroutine = StartCoroutine(LaunchRespawn(delay));
-    }
-
-    private IEnumerator LaunchRespawn(int delay)
-    {
-        var wait = new WaitForSeconds(delay);
-
-        yield return wait;
-        _meshRenderer.enabled = true;
-        Initialize();
     }
 
     private IEnumerator LaunchVisualize()
@@ -72,7 +60,6 @@ public class Coin : MonoBehaviour
 
         while (Mathf.Approximately(transform.localScale.x, 0) == false)
         {
-//            transform.localScale -= new Vector3(_changeScaleSpeed, _changeScaleSpeed, _changeScaleSpeed);
             transform.localScale = Vector3.MoveTowards(transform.localScale, vector, _changeScaleSpeed);
             yield return wait;
         }
