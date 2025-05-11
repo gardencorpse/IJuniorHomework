@@ -7,14 +7,12 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private float _runMultiplier = 1.1f;
     [SerializeField] private float _jumpForce = 500f;
     [SerializeField] private UserInput _userInput;
+    [SerializeField] private Flipper _flipper;
     [SerializeField] private GroundChecker _groundChecker;
     [SerializeField] private Animator _animator;
 
     private CharacterAnimation _characterAnimation;
     private Rigidbody2D _rigidbody;
-    private Flipper _flipper;
-    private bool _isLookingRight = true;
-    private bool _isGrounded = true;
     private bool _isJumping = false;
     private bool _isJump = false;
     private float _idleParameter = 0f;
@@ -23,20 +21,18 @@ public class PlayerMover : MonoBehaviour
 
     private void Awake()
     {
-        _userInput = gameObject.AddComponent<UserInput>();
         _rigidbody = GetComponent<Rigidbody2D>();
         _characterAnimation = new CharacterAnimation(_animator);
-        _flipper = new Flipper(transform, _isLookingRight);
     }
 
     private void OnEnable()
     {
-        _groundChecker.IsGrounded += OnGroundChange;
+        _groundChecker.Grounded += OnGroundChange;
     }
 
     private void OnDisable()
     {
-        _groundChecker.IsGrounded -= OnGroundChange;
+        _groundChecker.Grounded -= OnGroundChange;
     }
 
     private void Update()
@@ -79,11 +75,11 @@ public class PlayerMover : MonoBehaviour
 
     private void UpdateLookDirection()
     {
-        if (_flipper.IsLookingRigt && _userInput.HorizontalInput < 0)
+        if (_flipper.IsLookingRight && _userInput.HorizontalInput < 0)
         {
             _flipper.Flip();
         }
-        else if (_flipper.IsLookingRigt == false && _userInput.HorizontalInput > 0)
+        else if (_flipper.IsLookingRight == false && _userInput.HorizontalInput > 0)
         {
             _flipper.Flip();
         }
@@ -91,9 +87,7 @@ public class PlayerMover : MonoBehaviour
 
     private void OnGroundChange(bool isGrounded)
     {
-        _isGrounded = isGrounded;
-
-        if (_isGrounded)
+        if (isGrounded)
         {
             _characterAnimation.PlayGrounded();
             _isJumping = false;
@@ -108,7 +102,7 @@ public class PlayerMover : MonoBehaviour
     {
         _isJump = false;
 
-        if (_isGrounded)
+        if (_groundChecker.IsGround)
         {
             _isJumping = true;
             _rigidbody.AddForce(new Vector2(0, _jumpForce));

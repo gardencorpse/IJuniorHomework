@@ -1,17 +1,18 @@
 using UnityEngine;
 
-public class Flipper
+public class Flipper : MonoBehaviour
 {
-    private Transform _transform;
+    [SerializeField] private bool _isLookingRight = true;
+
     private int _flipAngle = 180;
-    public bool IsLookingRigt {  get; private set; }
 
-    public Flipper(Transform transform, bool isLookingRigt)
+    public bool IsLookingRight { get; private set; }
+
+    private void Start()
     {
-        _transform = transform;
-        IsLookingRigt = isLookingRigt;
+        IsLookingRight = _isLookingRight;
 
-        if(IsLookingRigt == false)
+        if (IsLookingRight == false)
         {
             Flip();
         }
@@ -19,7 +20,7 @@ public class Flipper
 
     public void Flip()
     {
-        IsLookingRigt = !IsLookingRigt;
-        _transform.Rotate(0, _flipAngle, 0);
+        IsLookingRight = !IsLookingRight;
+        transform.Rotate(0, _flipAngle, 0);
     }
 }

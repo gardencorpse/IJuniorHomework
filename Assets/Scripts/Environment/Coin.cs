@@ -11,9 +11,9 @@ public class Coin : MonoBehaviour
     private MeshRenderer _meshRenderer;
     private Coroutine _coroutine;
 
-    public int Value { get; private set; } = 1;
-
     public event Action<Coin> Collected;
+
+    public int Value { get; private set; } = 1;
 
     private void Awake()
     {

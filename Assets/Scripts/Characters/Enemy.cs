@@ -7,15 +7,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Transform _wayPointsContainer;
     [SerializeField] private Transform[] _wayPoints;
     [SerializeField] private float _speed = 2;
+    [SerializeField] private Flipper _flipper;
 
-    private Flipper _flipper;
     private int _currentIndex = 0;
-    private bool _isLookingRight = true;
-
-    private void Awake()
-    {
-        _flipper = new Flipper(transform, _isLookingRight);
-    }
 
 #if UNITY_EDITOR
     [ContextMenu("Refresh Child Array")]
@@ -50,11 +44,11 @@ public class Enemy : MonoBehaviour
     {
         bool isNeedLookRight = _wayPoints[_currentIndex].position.x > transform.position.x;
 
-        if (_flipper.IsLookingRigt && isNeedLookRight == false)
+        if (_flipper.IsLookingRight && isNeedLookRight == false)
         {
             _flipper.Flip();
         }
-        else if(_flipper.IsLookingRigt == false && isNeedLookRight)
+        else if(_flipper.IsLookingRight == false && isNeedLookRight)
         {
             _flipper.Flip();
         }

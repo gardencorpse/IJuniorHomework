@@ -4,55 +4,40 @@ using UnityEngine;
 
 public class GroundChecker : MonoBehaviour
 {
-    [SerializeField] private List<GroundDetector> _detectors;
+    [SerializeField] private Collider2D _collider;
+    private int _collisionsCount = 0;
     private bool _isGround = true;
-    private List<bool> _isGrounds = new List<bool>();
 
-    public event Action<bool> IsGrounded;
+    public event Action<bool> Grounded;
 
-    private void Awake()
+    public bool IsGround => _isGround;
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        foreach (var detector in _detectors)
+        if (collision.collider.TryGetComponent<Platform>(out Platform platform))
         {
-            _isGrounds.Add(detector.IsGround);
-        }
-    }
+            _collisionsCount++;
 
-    private void OnEnable()
-    {
-        foreach (var detector in _detectors)
-        {
-            detector.IsGrounded += OnGroundChange;
-        }
-    }
-
-    private void OnDisable()
-    {
-        foreach (var detector in _detectors)
-        {
-            detector.IsGrounded -= OnGroundChange;
-        }
-    }
-
-    private void OnGroundChange(bool isGround)
-    {
-        if (_isGround == isGround)
-            return;
-
-        foreach (var detector in _detectors)
-        {
-            if (detector.IsGround)
+            if (_collisionsCount == 1)
             {
-                if (_isGround)
-                    return;
-
                 _isGround = true;
-                IsGrounded.Invoke(true);
-                return;
+                Grounded.Invoke(true);
             }
         }
+    }
 
-        _isGround = false;
-        IsGrounded.Invoke(false);
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.collider.TryGetComponent<Platform>(out Platform platform))
+        {
+            _collisionsCount--;
+
+            if (_collisionsCount == 0)
+            {
+                _isGround = false;
+                Grounded.Invoke(false);
+            }
+        }
     }
 }
