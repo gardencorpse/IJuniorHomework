@@ -8,6 +8,7 @@ public static class Constants
         public const string Jump = nameof(Jump);
         public const string Fall = nameof(Fall);
         public const string Grounded = nameof(Grounded);
+        public const string isAttack = nameof(isAttack);
     }
 
     public static class Input
